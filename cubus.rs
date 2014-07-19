@@ -11,7 +11,7 @@
  *
  *      Created 2013-04-19: Ulrich Singer
  *
- *      $Id: cubus.rs 833 2014-07-19 07:43:51Z ucf $
+ *      $Id: cubus.rs 835 2014-07-19 09:53:35Z ucf $
  */
 
 #![crate_name = "cubus"]
@@ -30,7 +30,7 @@ use collections::vec::Vec;
 
 use std::io::{File, Open, Write};
 use std::{io, os};
-use std::owned::Box;
+//use std::owned::Box;
 //use std::boxed::BoxAny;         // Trait for Box.
 
 
@@ -38,9 +38,6 @@ use std::owned::Box;
  *
  *      Local Type System
  */
-
-
-type StrBox = Box<String>;
 
 
 /// A short unsigned integer type for cube-local coordinate values.
@@ -645,7 +642,7 @@ fn invert_axis (axdir: Axis)
 
 /// Returns the string representation of the given move sequence.
 fn movstk_to_string (movstk: &[Move])
--> StrBox
+-> String
 {
     let mut string = String::with_capacity(2 * movstk.len());
     for move in movstk.iter().rev()
@@ -654,7 +651,7 @@ fn movstk_to_string (movstk: &[Move])
         string = string + chrseq;
     }
 
-    box string
+    string
 
 }   /* movstk_to_string() */
 
@@ -674,7 +671,7 @@ fn movstk_push (movstk: &[Move], axdir: Axis, axval: Coord, ident: uint)
 /// Finds all move sequences, no longer than maxLen, that transform the
 /// srcCube into the dstCube.
 fn find_moves (maxLen: uint, srcCube: &Cube, dstCube: &Cube)
--> (Vec<StrBox>, uint)
+-> (Vec<String>, uint)
 {
     let cubeSize = srcCube.size;
     if dstCube.size != cubeSize
@@ -694,7 +691,7 @@ fn find_moves (maxLen: uint, srcCube: &Cube, dstCube: &Cube)
     };
     traceQ.push_back(oneTrc);
 
-    let mut seqStrs: Vec<StrBox> = vec![];
+    let mut seqStrs: Vec<String> = vec![];
     let mut moveNum: uint = 0;
 
     // Process available tracings.
