@@ -83,7 +83,7 @@ impl PartialEq for Huename
         *self as u8 != *other as u8
     }
 
-}   /* Eq for Huename */
+}   /* PartialEq for Huename */
 
 
 /// Face color distributions for a cube or a brick.
@@ -117,7 +117,7 @@ impl PartialEq for Hue
      || self.zp != other.zp
     }
 
-}   /* Eq for Hue */
+}   /* PartialEq for Hue */
 
 
 /// Smallest movable cube fragment.
