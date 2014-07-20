@@ -3,7 +3,7 @@
 A Rubik's Cube for your terminal in Rust.
 
 
-![Rubik's Cube](RustyCube.png)
+![](RustyCube.png)
 
 
 - Download Rust from [rust-lang.org](http://www.rust-lang.org).  The source compiles with rust-0.11 or later.
@@ -25,3 +25,5 @@ real	0m16.307s
 user	0m15.948s
 sys		0m0.351s
 ```
+
+When finding a move sequence of length 7 on a 3-cube, memory consumption of the `cubus` process reaches 10 GB on my system.
