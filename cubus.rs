@@ -11,7 +11,7 @@
  *
  *      Created 2013-04-19: Ulrich Singer
  *
- *      $Id: cubus.rs 835 2014-07-19 09:53:35Z ucf $
+ *      $Id: cubus.rs 842 2014-07-20 10:16:53Z ucf $
  */
 
 #![crate_name = "cubus"]
@@ -84,6 +84,34 @@ impl PartialEq for Huename
     }
 
 }   /* PartialEq for Huename */
+
+impl Huename
+{
+    /// Maps cube face color symbols to VT100 color control sequences.
+    fn vt100_attrs (&self)
+    -> &'static str
+    {
+        // "\e[2;30;40m" : Black
+        // "\e[2;31;41m" : Red
+        // "\e[2;32;42m" : Green
+        // "\e[2;33;43m" : Yellow
+        // "\e[2;34;44m" : Blue
+        // "\e[2;35;45m" : Magenta
+        // "\e[2;36;46m" : Cyan
+        // "\e[1;37;47m" : White
+        match *self
+        {
+            RD  => "\x1B[2;31;41m",
+            OR  => "\x1B[2;36;46m",    // Using Cyan for Orange.
+            WT  => "\x1B[1;37;47m",
+            YL  => "\x1B[2;33;43m",
+            GN  => "\x1B[2;32;42m",
+            BL  => "\x1B[2;34;44m"
+        }
+
+    }   /* .vt100_attrs() */
+
+}   /* Huename */
 
 
 /// Face color distributions for a cube or a brick.
@@ -859,31 +887,6 @@ fn tty_put_at (row: uint, col: uint, text: &str)
 }   /* tty_put_at() */
 
 
-/// Maps cube face color symbols to VT100 color control sequences.
-fn huename_vt100_attrs (colorSym: Huename)
--> &'static str
-{
-    // "[2;30;40m" : Black
-    // "[2;31;41m" : Red
-    // "[2;32;42m" : Green
-    // "[2;33;43m" : Yellow
-    // "[2;34;44m" : Blue
-    // "[2;35;45m" : Magenta
-    // "[2;36;46m" : Cyan
-    // "[1;37;47m" : White
-    match colorSym
-    {
-        RD  => "\x1B[2;31;41m",
-        OR  => "\x1B[2;36;46m",    // Using Cyan for Orange.
-        WT  => "\x1B[1;37;47m",
-        YL  => "\x1B[2;33;43m",
-        GN  => "\x1B[2;32;42m",
-        BL  => "\x1B[2;34;44m"
-    }
-
-}   /* huename_vt100_attrs() */
-
-
 /// Draws a single cube brick to the terminal as a character graphic.
 fn draw_brick (brick: &Brick, axmax: Coord, row: uint, col: uint)
 {
@@ -913,7 +916,7 @@ fn draw_brick (brick: &Brick, axmax: Coord, row: uint, col: uint)
 
     if posZ == axmax
     {
-        let attr = huename_vt100_attrs(brickHue.zp);
+        let attr = brickHue.zp.vt100_attrs();
         put(tty, bRow + 2, bCol +  0, attr, FULL9);
         put(tty, bRow + 3, bCol +  0, attr, FULL9);
         put(tty, bRow + 4, bCol +  0, attr, FULL9);
@@ -922,14 +925,14 @@ fn draw_brick (brick: &Brick, axmax: Coord, row: uint, col: uint)
 
     if posY == axmax
     {
-        let attr = huename_vt100_attrs(brickHue.yp);
+        let attr = brickHue.yp.vt100_attrs();
         put(tty, bRow + 0, bCol +  2, attr, FULL9);
         put(tty, bRow + 1, bCol +  1, attr, FULL9);
     }
 
     if posX == axmax
     {
-        let attr = huename_vt100_attrs(brickHue.xp);
+        let attr = brickHue.xp.vt100_attrs();
         put(tty, bRow + 0, bCol + 11, attr, FULL1);
         put(tty, bRow + 1, bCol + 10, attr, FULL2);
         put(tty, bRow + 2, bCol +  9, attr, FULL3);
