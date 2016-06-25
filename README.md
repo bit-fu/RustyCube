@@ -6,7 +6,7 @@ A Rubik's Cube for your terminal in Rust.
 ![](RustyCube.png)
 
 
-- Download Rust from [rust-lang.org](http://www.rust-lang.org).  The source compiles with rust-0.11 or later.
+- Download Rust from [rust-lang.org](http://www.rust-lang.org).  The source compiles with rustc-1.6.0 or later.
 - Compile the source:  `rustc --opt-level=3 cubus.rs`
 - Enjoy!  The example in the image above is: `./cubus 3 2X1 2Y1 2Z1`
 - Explore!  If you give a negative edge length, `cubus` finds all move sequences that have the same result as your input and are not longer than your input.  Beware, however, that combinatorial explosion makes your RAM evaporate quickly.  A sequence of 6 moves on a 3x3x3 cube will already strain your patience and your machine.  Consider the above example, having 6 moves:
@@ -25,5 +25,3 @@ real	0m16.307s
 user	0m15.948s
 sys		0m0.351s
 ```
-
-When finding a move sequence of length 7 on a 3-cube, memory consumption of the `cubus` process reaches 10 GB on my system.
