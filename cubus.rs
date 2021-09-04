@@ -881,7 +881,7 @@ fn tty_out ()
     match OpenOptions::new().create(true).write(true).open("/dev/tty")
     {
         Ok(stream)  =>  stream,
-        Err(error)  =>  panic!(error)
+        Err(error)  =>  panic!("{}", error)
     }
 
 }   /* tty_out() */
