@@ -1,3 +1,6 @@
-.svn
-tags
-Makefile
+Cargo.lock
+
+
+# Added by cargo
+
+/target

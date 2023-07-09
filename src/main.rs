@@ -1,11 +1,13 @@
 /*  ========================================================================  *
  *
- *    cubus.rs
- *    ~~~~~~~~
+ *    main.rs
+ *    ~~~~~~~
  *
  *    Simulation of Ernö Rubik’s Cube
  *
- *    Target language:    Rust 1.60.0
+ *    Project:            cubus
+ *
+ *    Target language:    Rust 1.57.0
  *
  *    Text encoding:      UTF-8
  *
@@ -1098,4 +1100,4 @@ fn main ()
 }   /* main() */
 
 
-/* ~ cubus.rs ~ */
+/* ~ main.rs ~ */
