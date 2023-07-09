@@ -5,13 +5,11 @@
  *
  *    Simulation of Ernö Rubik’s Cube
  *
- *    Target language:    Rust 1.6.0
+ *    Target language:    Rust 1.60.0
  *
  *    Text encoding:      UTF-8
  *
  *    Created 2013-04-19: Ulrich Singer
- *
- *    $Id: cubus.rs 1320 2016-06-25 18:03:49Z ucf $
  */
 
 #![crate_name = "cubus"]
@@ -105,12 +103,12 @@ impl Huename
 #[derive(Eq, Copy, Clone)]
 struct Hue
 {
-    xp: Huename,
-    xn: Huename,
-    yp: Huename,
-    yn: Huename,
-    zp: Huename,
-    zn: Huename
+    xpos: Huename,
+    xneg: Huename,
+    ypos: Huename,
+    yneg: Huename,
+    zpos: Huename,
+    zneg: Huename
 
 }   /* Hue */
 
@@ -119,17 +117,17 @@ impl PartialEq for Hue
     fn eq (&self, other: &Hue)
     -> bool
     {
-        self.xp == other.xp
-     && self.yp == other.yp
-     && self.zp == other.zp
+        self.xpos == other.xpos
+     && self.ypos == other.ypos
+     && self.zpos == other.zpos
     }
 
     fn ne (&self, other: &Hue)
     -> bool
     {
-        self.xp != other.xp
-     || self.yp != other.yp
-     || self.zp != other.zp
+        self.xpos != other.xpos
+     || self.ypos != other.ypos
+     || self.zpos != other.zpos
     }
 
 }   /* impl PartialEq for Hue */
@@ -151,11 +149,12 @@ impl Brick
     -> Brick
     {
         Brick {
-            curLoc: Loc { x: x, y: y, z: z },
+            curLoc: Loc { x, y, z },
             curHue: Hue {
-                xp: Huename::RD, xn: Huename::OR,
-                yp: Huename::WT, yn: Huename::YL,
-                zp: Huename::GN, zn: Huename::BL }
+                xpos: Huename::RD, xneg: Huename::OR,
+                ypos: Huename::WT, yneg: Huename::YL,
+                zpos: Huename::GN, zneg: Huename::BL
+            }
         }
 
     } /* ::new() */
@@ -176,12 +175,12 @@ fn brick_rotated_x_pos (brick: &Brick, axmax: Coord)
             z: srcLoc.y
         },
         curHue: Hue {
-            xp: srcHue.xp,
-            xn: srcHue.xn,
-            yp: srcHue.zn,
-            yn: srcHue.zp,
-            zp: srcHue.yp,
-            zn: srcHue.yn
+            xpos: srcHue.xpos,
+            xneg: srcHue.xneg,
+            ypos: srcHue.zneg,
+            yneg: srcHue.zpos,
+            zpos: srcHue.ypos,
+            zneg: srcHue.yneg
         }
     }
 
@@ -201,12 +200,12 @@ fn brick_rotated_x_neg (brick: &Brick, axmax: Coord)
             z: axmax - srcLoc.y
         },
         curHue: Hue {
-            xp: srcHue.xp,
-            xn: srcHue.xn,
-            yp: srcHue.zp,
-            yn: srcHue.zn,
-            zp: srcHue.yn,
-            zn: srcHue.yp
+            xpos: srcHue.xpos,
+            xneg: srcHue.xneg,
+            ypos: srcHue.zpos,
+            yneg: srcHue.zneg,
+            zpos: srcHue.yneg,
+            zneg: srcHue.ypos
         }
     }
 
@@ -226,12 +225,12 @@ fn brick_rotated_y_pos (brick: &Brick, axmax: Coord)
             z: axmax - srcLoc.x
         },
         curHue: Hue {
-            xp: srcHue.zp,
-            xn: srcHue.zn,
-            yp: srcHue.yp,
-            yn: srcHue.yn,
-            zp: srcHue.xn,
-            zn: srcHue.xp
+            xpos: srcHue.zpos,
+            xneg: srcHue.zneg,
+            ypos: srcHue.ypos,
+            yneg: srcHue.yneg,
+            zpos: srcHue.xneg,
+            zneg: srcHue.xpos
         }
     }
 
@@ -251,12 +250,12 @@ fn brick_rotated_y_neg (brick: &Brick, axmax: Coord)
             z: srcLoc.x
         },
         curHue: Hue {
-            xp: srcHue.zn,
-            xn: srcHue.zp,
-            yp: srcHue.yp,
-            yn: srcHue.yn,
-            zp: srcHue.xp,
-            zn: srcHue.xn
+            xpos: srcHue.zneg,
+            xneg: srcHue.zpos,
+            ypos: srcHue.ypos,
+            yneg: srcHue.yneg,
+            zpos: srcHue.xpos,
+            zneg: srcHue.xneg
         }
     }
 
@@ -276,12 +275,12 @@ fn brick_rotated_z_pos (brick: &Brick, axmax: Coord)
             z: srcLoc.z
         },
         curHue: Hue {
-            xp: srcHue.yn,
-            xn: srcHue.yp,
-            yp: srcHue.xp,
-            yn: srcHue.xn,
-            zp: srcHue.zp,
-            zn: srcHue.zn
+            xpos: srcHue.yneg,
+            xneg: srcHue.ypos,
+            ypos: srcHue.xpos,
+            yneg: srcHue.xneg,
+            zpos: srcHue.zpos,
+            zneg: srcHue.zneg
         }
     }
 
@@ -301,12 +300,12 @@ fn brick_rotated_z_neg (brick: &Brick, axmax: Coord)
             z: srcLoc.z
         },
         curHue: Hue {
-            xp: srcHue.yp,
-            xn: srcHue.yn,
-            yp: srcHue.xn,
-            yn: srcHue.xp,
-            zp: srcHue.zp,
-            zn: srcHue.zn
+            xpos: srcHue.ypos,
+            xneg: srcHue.yneg,
+            ypos: srcHue.xneg,
+            yneg: srcHue.xpos,
+            zpos: srcHue.zpos,
+            zneg: srcHue.zneg
         }
     }
 
@@ -436,7 +435,7 @@ fn movevec_of_string (string: &str, axmax: Coord)
             {
                 let axval = (chr as u8 - '0' as u8) as Coord;
 
-                let newMove = Move { axdir: axdir, axval: axval, ident: 0 };
+                let newMove = Move { axdir, axval, ident: 0 };
                 while count != 0
                 {
                     moves.push(newMove.clone());
@@ -496,8 +495,8 @@ impl Cube
         }
 
         Cube {
-            size:   size,
-            bricks: bricks
+            size,
+            bricks
         }
 
     } /* ::new() */
@@ -517,8 +516,8 @@ impl Cube
         }
 
         Cube {
-            size:   size,
-            bricks: bricks
+            size,
+            bricks
         }
 
     } /* .copy_with_moves() */
@@ -657,7 +656,7 @@ impl Trail
     {
         let mut sequel: Vec<Move> = Vec::with_capacity(self.steps.len() + 1);
 
-        sequel.push(Move { axdir: axdir, axval: axval, ident: ident });
+        sequel.push(Move { axdir, axval, ident });
         sequel.extend(self.steps.iter().cloned());
 
         Trail { steps: sequel }
@@ -941,7 +940,7 @@ fn draw_brick (brick: &Brick, axmax: Coord, row: i16, col: i16)
 
     if posZ == axmax
     {
-        let attr = brickHue.zp.vt100_attrs();
+        let attr = brickHue.zpos.vt100_attrs();
         put(tty, bRow + 2, bCol +  0, attr, FULL9);
         put(tty, bRow + 3, bCol +  0, attr, FULL9);
         put(tty, bRow + 4, bCol +  0, attr, FULL9);
@@ -950,14 +949,14 @@ fn draw_brick (brick: &Brick, axmax: Coord, row: i16, col: i16)
 
     if posY == axmax
     {
-        let attr = brickHue.yp.vt100_attrs();
+        let attr = brickHue.ypos.vt100_attrs();
         put(tty, bRow + 0, bCol +  2, attr, FULL9);
         put(tty, bRow + 1, bCol +  1, attr, FULL9);
     }
 
     if posX == axmax
     {
-        let attr = brickHue.xp.vt100_attrs();
+        let attr = brickHue.xpos.vt100_attrs();
         put(tty, bRow + 0, bCol + 11, attr, FULL1);
         put(tty, bRow + 1, bCol + 10, attr, FULL2);
         put(tty, bRow + 2, bCol +  9, attr, FULL3);
